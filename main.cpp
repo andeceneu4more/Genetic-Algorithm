@@ -37,7 +37,7 @@ long long zecimal(string s)
 }
 double Fitness(double x)
 {
-    return (- x * x + 1) * 1.0;
+    return (- x * x + x + 2) * 1.0;
 }
 class cromozom
 {
