@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1545771886 source:d:\projects\fmi dl\dl 2\semestrul 1\tap\lab 5\genetic\main.cpp
+	<vector>
+	<fstream>
+	<random>
+	<string>
+	<bits/stdc++.h>
+	<cmath>
+	<algorithm>
+	<climits>
+
