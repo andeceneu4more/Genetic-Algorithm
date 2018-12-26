@@ -12,6 +12,7 @@ using namespace std;
 int nCrom, A, B, precizie, nGen, lungime, generatie;
 double pIncrucisare, pMutatie;
 double probMomentana[nmax], probPartiala[nmax];
+double valMax, fitnessMax;
 string binar(long long x)
 {
     int i = 0;
@@ -70,9 +71,61 @@ inline double cromozom :: fitness()
 {
     return _fitness;
 }
+class familie
+{
+    int _tata, _mama, _rupere;
+    double _potential;
+public:
+    int tata();
+    void tata(int);
+    int mama();
+    void mama(int);
+    int rupere();
+    void rupere(int);
+    double potential();
+    void potential(double);
+};
+int familie :: tata()
+{
+    return _tata;
+}
+void familie :: tata(int Tata)
+{
+    _tata = Tata;
+}
+int familie :: mama()
+{
+    return _mama;
+}
+void familie :: mama(int Mama)
+{
+    _mama = Mama;
+}
+int familie :: rupere()
+{
+    return _rupere;
+}
+void familie :: rupere(int Rupere)
+{
+    _rupere = Rupere;
+}
+double familie :: potential()
+{
+    return _potential;
+}
+void familie :: potential(double Potential)
+{
+    _potential = Potential;
+}
+bool comp(familie F1, familie F2)
+{
+    return F1.potential() > F2.potential();
+}
+bool viz[nmax];
 vector <cromozom> Crom;
 vector <cromozom> populatieNoua;
 vector <int> parinti;
+vector <familie> Comunitate;
 random_device randDispozitiv;
 mt19937 generator(randDispozitiv());
 uniform_real_distribution <double> uniforma(0.0, 1.0);
@@ -150,12 +203,15 @@ void selectIndivizi()
 }
 void incruciseaza()
 {
-    int i, aleator;
+    int i, j, aleator, Mama, Tata;
     string cod1, cod2, aux;
-    for (i = 0; i < parinti.size() - 1; i += 2)
+    cromozom C1, C2;
+    familie Fam;
+    for (i = 0; i < parinti.size() - 1; i++)
+        for (j = i + 1; j < parinti.size(); j++ )
         {
             cod1 = populatieNoua[parinti[i]].cod();
-            cod2 = populatieNoua[parinti[i + 1]].cod();
+            cod2 = populatieNoua[parinti[j]].cod();
             aleator = uniformaInt(generator) % lungime;
             // un punct de rupere ( pe pozitia aleator )
 
@@ -163,11 +219,43 @@ void incruciseaza()
             cod1.replace(0, aleator, cod2.substr(0, aleator));
             cod2.replace(0, aleator, aux);
 
-            populatieNoua[parinti[i]].cod(cod1);
-            populatieNoua[parinti[i + 1]].cod(cod2);
+            C1.cod(cod1);
+            C2.cod(cod2);
+
+            Fam.tata(parinti[i]);
+            Fam.mama(parinti[j]);
+            Fam.rupere(aleator);
+            Fam.potential(max(C1.fitness(), C2.fitness()));
+
+            Comunitate.push_back(Fam);
         }
     parinti.clear();
-    // Incrucisare de tipul 1-2, 3-4, etc...
+
+    sort(Comunitate.begin(), Comunitate.end(), comp);
+
+    for (i = 0; i < Comunitate.size(); i++)
+    {
+        Tata = Comunitate[i].tata();
+        Mama = Comunitate[i].mama();
+        if (viz[Tata] == false && viz[Mama] == false)
+        {
+            viz[Tata] = true;
+            viz[Mama] = true;
+
+            cod1 = populatieNoua[Tata].cod();
+            cod2 = populatieNoua[Mama].cod();
+            aleator = Comunitate[i].rupere();
+
+            aux = cod1.substr(0, aleator);
+            cod1.replace(0, aleator, cod2.substr(0, aleator));
+            cod2.replace(0, aleator, aux);
+
+            populatieNoua[Tata].cod(cod1);
+            populatieNoua[Mama].cod(cod2);
+        }
+    }
+    Comunitate.clear();
+    memset(viz, 0, sizeof(viz));
 }
 void mutatii()
 {
@@ -193,7 +281,6 @@ void mutatii()
 void itereaza()
 {
     int i;
-    double valMax, fitnessMax;
     for (generatie = 1; generatie <= nGen; generatie++)
     {
         calculeazaProb();
