@@ -57,7 +57,6 @@ inline string cromozom :: cod()
 }
 inline void cromozom :: cod(string nou)
 {
-	_cod.clear();
     _cod = nou;
     long long x = zecimal(_cod);
     _valoare = (B - A) * 1.0 / ( (1 << lungime) - 1) * x * 1.0 + A;
@@ -91,7 +90,6 @@ void initializare()
     for (i = 1; i <= nCrom; i++)
     {
         aleator = uniformaInput(generator);
-        individ.clear();
         individ = binar(aleator);
         C.cod(individ);
         Crom.push_back(C);
@@ -151,27 +149,23 @@ void selectIndivizi()
 }
 void incruciseaza()
 {
-	uniform_int_distribution <int> uniformaInt(0, lungime - 1);
+    uniform_int_distribution <int> uniformaInt(0, lungime - 1);
     int i, aleator;
     string cod1, cod2, aux;
-    for (i = 0; i <= parinti.size() - 2; i += 2)
-    {
-        cod1 = populatieNoua[parinti[i]].cod();
-        cod2 = populatieNoua[parinti[i + 1]].cod();
-        aleator = uniformaInt(generator);
-        // un punct de rupere ( pe pozitia aleator )
+    for (i = 0; i < parinti.size() - 1; i += 2)
+        {
+            cod1 = populatieNoua[parinti[i]].cod();
+            cod2 = populatieNoua[parinti[i + 1]].cod();
+            aleator = uniformaInt(generator);
+            // un punct de rupere ( pe pozitia aleator )
 
-        aux = cod1.substr(0, aleator);
-        cod1.replace(0, aleator, cod2.substr(0, aleator));
-        cod2.replace(0, aleator, aux);
+            aux = cod1.substr(0, aleator);
+            cod1.replace(0, aleator, cod2.substr(0, aleator));
+            cod2.replace(0, aleator, aux);
 
-        populatieNoua[parinti[i]].cod(cod1);
-        populatieNoua[parinti[i + 1]].cod(cod2);
-
-        cod1.clear();
-        cod2.clear();
-        aux.clear();
-    }
+            populatieNoua[parinti[i]].cod(cod1);
+            populatieNoua[parinti[i + 1]].cod(cod2);
+        }
     parinti.clear();
     // Incrucisare de tipul 1-2, 3-4, etc...
 }
@@ -196,7 +190,6 @@ void mutatii()
             }
         }
         populatieNoua[i].cod(aux);
-        aux.clear();
     }
 }
 void itereaza()
