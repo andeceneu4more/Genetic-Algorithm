@@ -57,7 +57,6 @@ inline string cromozom :: cod()
 }
 inline void cromozom :: cod(string nou)
 {
-	_cod.clear();
     _cod = nou;
     long long x = zecimal(_cod);
     _valoare = (B - A) * 1.0 / ( (1 << lungime) - 1) * x * 1.0 + A;
@@ -77,6 +76,7 @@ vector <int> parinti;
 random_device randDispozitiv;
 mt19937 generator(randDispozitiv());
 uniform_real_distribution <double> uniforma(0.0, 1.0);
+uniform_int_distribution <int> uniformaInt(0, nmax);
 ofstream fout("Evolutie.out");
 void initializare()
 {
@@ -91,7 +91,6 @@ void initializare()
     for (i = 1; i <= nCrom; i++)
     {
         aleator = uniformaInput(generator);
-        individ.clear();
         individ = binar(aleator);
         C.cod(individ);
         Crom.push_back(C);
@@ -151,52 +150,44 @@ void selectIndivizi()
 }
 void incruciseaza()
 {
-	uniform_int_distribution <int> uniformaInt(0, lungime - 1);
     int i, aleator;
     string cod1, cod2, aux;
-    for (i = 0; i <= parinti.size() - 2; i += 2)
-    {
-        cod1 = populatieNoua[parinti[i]].cod();
-        cod2 = populatieNoua[parinti[i + 1]].cod();
-        aleator = uniformaInt(generator);
-        // un punct de rupere ( pe pozitia aleator )
+    for (i = 0; i < parinti.size() - 1; i += 2)
+        {
+            cod1 = populatieNoua[parinti[i]].cod();
+            cod2 = populatieNoua[parinti[i + 1]].cod();
+            aleator = uniformaInt(generator) % lungime;
+            // un punct de rupere ( pe pozitia aleator )
 
-        aux = cod1.substr(0, aleator);
-        cod1.replace(0, aleator, cod2.substr(0, aleator));
-        cod2.replace(0, aleator, aux);
+            aux = cod1.substr(0, aleator);
+            cod1.replace(0, aleator, cod2.substr(0, aleator));
+            cod2.replace(0, aleator, aux);
 
-        populatieNoua[parinti[i]].cod(cod1);
-        populatieNoua[parinti[i + 1]].cod(cod2);
-
-        cod1.clear();
-        cod2.clear();
-        aux.clear();
-    }
+            populatieNoua[parinti[i]].cod(cod1);
+            populatieNoua[parinti[i + 1]].cod(cod2);
+        }
     parinti.clear();
     // Incrucisare de tipul 1-2, 3-4, etc...
 }
 void mutatii()
 {
-    int i, j;
+    int i, pozAleator;
     double aleator;
     string aux;
-    for (i = 1; i < populatieNoua.size(); i++)
+    for (i = 1; i < Crom.size(); i++)
     {
-        aux = populatieNoua[i].cod();
-        for (j = 0; j < lungime; j++)
+        aleator = uniforma(generator);
+        if (aleator < pMutatie)
         {
-            aleator = uniforma(generator);
-            if (aleator < pMutatie)
-            {
-                if (aux[j] == '0')
-                    aux[j] = '1';
-                else
-                    aux[j] = '0';
-                // complementam
-            }
+            aux = populatieNoua[i].cod();
+            pozAleator = uniformaInt(generator) % lungime;
+            if (aux[pozAleator] == '0')
+                aux[pozAleator] = '1';
+            else
+                aux[pozAleator] = '0';
+            // complementam
+            populatieNoua[i].cod(aux);
         }
-        populatieNoua[i].cod(aux);
-        aux.clear();
     }
 }
 void itereaza()

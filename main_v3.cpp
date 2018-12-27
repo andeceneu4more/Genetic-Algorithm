@@ -12,6 +12,7 @@ using namespace std;
 int nCrom, A, B, precizie, nGen, lungime, generatie;
 double pIncrucisare, pMutatie;
 double probMomentana[nmax], probPartiala[nmax];
+bool viz[nmax];
 string binar(long long x)
 {
     int i = 0;
@@ -57,7 +58,6 @@ inline string cromozom :: cod()
 }
 inline void cromozom :: cod(string nou)
 {
-	_cod.clear();
     _cod = nou;
     long long x = zecimal(_cod);
     _valoare = (B - A) * 1.0 / ( (1 << lungime) - 1) * x * 1.0 + A;
@@ -91,7 +91,6 @@ void initializare()
     for (i = 1; i <= nCrom; i++)
     {
         aleator = uniformaInput(generator);
-        individ.clear();
         individ = binar(aleator);
         C.cod(individ);
         Crom.push_back(C);
@@ -152,12 +151,27 @@ void selectIndivizi()
 void incruciseaza()
 {
 	uniform_int_distribution <int> uniformaInt(0, lungime - 1);
-    int i, aleator;
+	uniform_int_distribution <int> uniformaIncrucisare(0, parinti.size() - 1);
+    int tata, mama, aleator, nParinti = parinti.size();
     string cod1, cod2, aux;
-    for (i = 0; i <= parinti.size() - 2; i += 2)
+    while (nParinti >= 2)
     {
-        cod1 = populatieNoua[parinti[i]].cod();
-        cod2 = populatieNoua[parinti[i + 1]].cod();
+    	do
+    	{
+    		tata = uniformaIncrucisare(generator);
+    	}
+    	while (viz[tata]);
+    	viz[tata] = true;
+    	do
+    	{
+    		mama = uniformaIncrucisare(generator);
+    	}
+    	while (viz[mama]);
+    	viz[mama] = true;
+    	nParinti -= 2;
+
+        cod1 = populatieNoua[parinti[tata]].cod();
+        cod2 = populatieNoua[parinti[mama]].cod();
         aleator = uniformaInt(generator);
         // un punct de rupere ( pe pozitia aleator )
 
@@ -165,15 +179,11 @@ void incruciseaza()
         cod1.replace(0, aleator, cod2.substr(0, aleator));
         cod2.replace(0, aleator, aux);
 
-        populatieNoua[parinti[i]].cod(cod1);
-        populatieNoua[parinti[i + 1]].cod(cod2);
-
-        cod1.clear();
-        cod2.clear();
-        aux.clear();
+        populatieNoua[parinti[tata]].cod(cod1);
+        populatieNoua[parinti[mama]].cod(cod2);
     }
     parinti.clear();
-    // Incrucisare de tipul 1-2, 3-4, etc...
+    memset(viz, 0, sizeof(viz));
 }
 void mutatii()
 {
@@ -196,7 +206,6 @@ void mutatii()
             }
         }
         populatieNoua[i].cod(aux);
-        aux.clear();
     }
 }
 void itereaza()

@@ -4,29 +4,17 @@
 	<ActiveTarget name="Debug" />
 	<File name="Evolutie.out" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="140" topLine="0" />
+			<Cursor1 position="529" topLine="0" />
 		</Cursor>
-	</File>
-	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4668" topLine="0" />
-		</Cursor>
-		<Folding>
-			<Collapse line="16" />
-			<Collapse line="29" />
-			<Collapse line="88" />
-			<Collapse line="92" />
-			<Collapse line="96" />
-			<Collapse line="100" />
-			<Collapse line="104" />
-			<Collapse line="108" />
-			<Collapse line="112" />
-			<Collapse line="116" />
-		</Folding>
 	</File>
 	<File name="populatie.in" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="14" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3581" topLine="202" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
